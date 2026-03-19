@@ -1,0 +1,20 @@
+import { fetchData } from "./api";
+
+export const getUserDetails = () => fetchData("/users");
+export const getHomeDetails = () => fetchData("/home");
+export const getFeatureDetails = () => fetchData("/features");
+export const getServiccesDetails = () => fetchData("/services");
+export const getTestimonyDetails = () => fetchData("/testimonial");
+export const getInfiniteDetails = () => fetchData("/infinite");
+export const getContactDetails = () => fetchData("/contact");
+export const getCareerDetails = () => fetchData("/career");
+export const getFooterDetails = () => fetchData("/footer");
+export const getAllServices = () => fetchData("/service-items");
+export const getAllJobs = () => fetchData("/jobs");
+export const getAllDashobardJobs = () => fetchData("/jobs/all");
+export const getAppliedJobs = () => fetchData("/jobs/applied");
+export const getPartnerDetails = () => fetchData("/partner");
+export const getPartnerBenefits = () => fetchData("/partner-benefits");
+export const getMessages = () => fetchData("/messages");
+export const getSettingDetails = () => fetchData("/settings");
+export const getAiSettings = () => fetchData("/ai-settings");
