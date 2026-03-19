@@ -89,6 +89,50 @@ import {
   getUserDetails,
 } from "@/app/lib/data";
 
+type DashboardUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
+
+type ServiceItem = {
+  id: number;
+};
+
+type DashboardJob = {
+  id: number;
+  jobStatus: string;
+  expiresAt: string | Date | null;
+};
+
+type AppliedJobRecord = {
+  id: number;
+};
+
+type PartnerBenefit = {
+  id: number;
+};
+
+type MessageRecord = {
+  id: number;
+};
+
+type SiteSettings = {
+  REGISTER_PIN: string;
+};
+
+type AiSettings = {
+  questions: string[];
+};
+
+type FooterData = {
+  email: string;
+  address: string;
+  linkedIn: string;
+  facebook: string;
+};
+
 function DashboardSectionHeader({
   icon: Icon,
   title,
@@ -542,7 +586,7 @@ export const router = createBrowserRouter([
             settings,
             aiSettings,
             footer,
-          ] = await Promise.all([
+          ] = (await Promise.all([
             getUserDetails(),
             getAllServices(),
             getAllDashobardJobs(),
@@ -552,22 +596,30 @@ export const router = createBrowserRouter([
             getSettingDetails(),
             getAiSettings(),
             getFooterDetails(),
-          ]);
+          ])) as [
+            DashboardUser[],
+            ServiceItem[],
+            DashboardJob[],
+            AppliedJobRecord[],
+            PartnerBenefit[],
+            MessageRecord[],
+            SiteSettings | undefined,
+            AiSettings | undefined,
+            FooterData | undefined,
+          ];
 
           const now = new Date();
-          const liveJobs =
-            jobs?.filter((job: any) => {
-              const expires = job.expiresAt ? new Date(job.expiresAt) : null;
-              return (
-                job.jobStatus === "published" &&
-                (expires === null || expires >= now)
-              );
-            }) ?? [];
-          const inactiveJobs =
-            jobs?.filter((job: any) => {
-              const expires = job.expiresAt ? new Date(job.expiresAt) : null;
-              return job.jobStatus === "draft" || (expires !== null && expires < now);
-            }) ?? [];
+          const liveJobs = jobs.filter((job) => {
+            const expires = job.expiresAt ? new Date(job.expiresAt) : null;
+            return (
+              job.jobStatus === "published" &&
+              (expires === null || expires >= now)
+            );
+          });
+          const inactiveJobs = jobs.filter((job) => {
+            const expires = job.expiresAt ? new Date(job.expiresAt) : null;
+            return job.jobStatus === "draft" || (expires !== null && expires < now);
+          });
 
           return {
             summary: {
@@ -592,7 +644,7 @@ export const router = createBrowserRouter([
                 facebook: footer?.facebook ?? "",
               },
               ai: {
-                questions: aiSettings?.questions?.map((q: string) => q) ?? [],
+                questions: aiSettings?.questions?.map((q) => q) ?? [],
               },
               pin: settings?.REGISTER_PIN,
             },
